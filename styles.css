@@ -189,6 +189,41 @@ textarea {
   line-height: 1.8;
 }
 
+.usp-card {
+  max-width: 640px;
+  margin-top: 28px;
+  padding: 24px 26px;
+  border: 1px solid rgba(85, 215, 255, 0.18);
+  border-radius: var(--radius-lg);
+  background:
+    linear-gradient(180deg, rgba(13, 22, 37, 0.88), rgba(7, 13, 22, 0.98)),
+    radial-gradient(circle at top right, rgba(28, 240, 208, 0.12), transparent 40%);
+  box-shadow: var(--shadow);
+}
+
+.usp-label {
+  display: inline-flex;
+  margin-bottom: 14px;
+  color: var(--cyan);
+  font-size: 0.8rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.usp-card h2 {
+  margin: 0 0 12px;
+  font-family: "Sora", sans-serif;
+  font-size: clamp(1.25rem, 2vw, 1.7rem);
+  line-height: 1.25;
+}
+
+.usp-card p {
+  margin: 0;
+  color: var(--muted);
+  line-height: 1.8;
+}
+
 .hero-actions {
   display: flex;
   gap: 14px;
@@ -699,6 +734,11 @@ textarea {
 
   .hero-metrics {
     grid-template-columns: 1fr;
+  }
+
+  .hero-actions {
+    flex-direction: column;
+    align-items: stretch;
   }
 
   .section {
