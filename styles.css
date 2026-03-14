@@ -39,6 +39,11 @@ body {
   min-height: 100vh;
 }
 
+body.has-motion,
+body {
+  overflow-x: hidden;
+}
+
 body::before {
   content: "";
   position: fixed;
@@ -69,9 +74,59 @@ select {
 }
 
 .page-shell {
+  position: relative;
+  z-index: 1;
   width: min(calc(100% - 32px), var(--width));
   margin: 0 auto;
   padding: 18px 0 64px;
+}
+
+.motion-layer {
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  overflow: hidden;
+}
+
+.motion-orb,
+.motion-grid {
+  position: absolute;
+}
+
+.motion-orb {
+  border-radius: 50%;
+  filter: blur(28px);
+  opacity: 0.5;
+  animation: orb-drift 18s ease-in-out infinite;
+}
+
+.orb-a {
+  top: 6%;
+  left: -6%;
+  width: 340px;
+  height: 340px;
+  background: radial-gradient(circle, rgba(88, 219, 255, 0.44), transparent 64%);
+}
+
+.orb-b {
+  right: -8%;
+  top: 38%;
+  width: 420px;
+  height: 420px;
+  background: radial-gradient(circle, rgba(31, 127, 195, 0.38), transparent 68%);
+  animation-delay: -8s;
+}
+
+.motion-grid {
+  inset: -15%;
+  background:
+    linear-gradient(rgba(88, 219, 255, 0.06) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(88, 219, 255, 0.06) 1px, transparent 1px);
+  background-size: 110px 110px;
+  transform: perspective(900px) rotateX(75deg);
+  transform-origin: top;
+  opacity: 0.32;
+  animation: grid-slide 16s linear infinite;
 }
 
 .site-header {
@@ -158,12 +213,13 @@ label small,
   padding: 12px 18px;
   border-radius: 999px;
   border: 1px solid var(--line-strong);
-  transition: transform 180ms ease, border-color 180ms ease, background 180ms ease;
+  transition: transform 180ms ease, border-color 180ms ease, background 180ms ease, box-shadow 180ms ease;
 }
 
 .header-cta:hover,
 .button:hover {
   transform: translateY(-2px);
+  box-shadow: 0 16px 40px rgba(88, 219, 255, 0.18);
 }
 
 .button {
@@ -221,6 +277,7 @@ label small,
   font-size: clamp(3rem, 6vw, 5.5rem);
   line-height: 0.96;
   letter-spacing: -0.05em;
+  text-wrap: balance;
 }
 
 .hero-text {
@@ -274,6 +331,7 @@ label small,
 .hero-visual {
   display: flex;
   justify-content: center;
+  transition: transform 180ms ease-out;
 }
 
 .printer-card,
@@ -290,6 +348,8 @@ label small,
   border-radius: var(--radius-xl);
   background: linear-gradient(180deg, rgba(10, 31, 44, 0.92), rgba(8, 21, 31, 0.92));
   box-shadow: var(--shadow);
+  transition: transform 220ms ease, border-color 220ms ease, box-shadow 220ms ease;
+  transform-style: preserve-3d;
 }
 
 .printer-card {
@@ -297,6 +357,15 @@ label small,
   width: min(100%, 470px);
   padding: 28px;
   overflow: hidden;
+}
+
+.printer-card::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(125deg, transparent 20%, rgba(255, 255, 255, 0.16) 40%, transparent 58%);
+  transform: translateX(-120%);
+  animation: glass-sweep 7s ease-in-out infinite;
 }
 
 .printer-card p {
@@ -312,11 +381,29 @@ label small,
   border-radius: 50%;
   background: radial-gradient(circle, rgba(88, 219, 255, 0.38), transparent 60%);
   filter: blur(16px);
+  animation: pulse-glow 4.4s ease-in-out infinite;
+}
+
+.printer-particles {
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+}
+
+.particle {
+  position: absolute;
+  bottom: 70px;
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: rgba(219, 251, 255, 0.95);
+  box-shadow: 0 0 18px rgba(88, 219, 255, 0.9);
+  animation: particle-rise linear infinite;
 }
 
 .printer-frame {
   position: relative;
-  z-index: 1;
+  z-index: 2;
   height: 430px;
   border: 1px solid rgba(204, 249, 255, 0.22);
   border-radius: 28px;
@@ -326,6 +413,7 @@ label small,
 
 .printer-topbar,
 .printer-gantry,
+.scanner-line,
 .printer-bed,
 .printer-head,
 .printer-build {
@@ -347,6 +435,17 @@ label small,
   right: 58px;
   height: 10px;
   background: linear-gradient(90deg, rgba(255, 255, 255, 0.12), rgba(88, 219, 255, 0.7), rgba(255, 255, 255, 0.12));
+}
+
+.scanner-line {
+  top: 84px;
+  left: 56px;
+  right: 56px;
+  height: 4px;
+  border-radius: 999px;
+  background: linear-gradient(90deg, transparent, rgba(202, 251, 255, 0.96), transparent);
+  box-shadow: 0 0 20px rgba(88, 219, 255, 0.48);
+  animation: scan-line 3.4s ease-in-out infinite;
 }
 
 .printer-bed {
@@ -392,11 +491,13 @@ label small,
 .build-left {
   left: 110px;
   height: 90px;
+  animation: build-grow-left 4.6s ease-in-out infinite;
 }
 
 .build-right {
   right: 110px;
   height: 130px;
+  animation: build-grow-right 5.4s ease-in-out infinite;
 }
 
 @keyframes print-head {
@@ -406,6 +507,93 @@ label small,
   }
   50% {
     transform: translateX(112px);
+  }
+}
+
+@keyframes scan-line {
+  0%,
+  100% {
+    transform: translateY(0);
+    opacity: 0.35;
+  }
+  50% {
+    transform: translateY(236px);
+    opacity: 1;
+  }
+}
+
+@keyframes pulse-glow {
+  0%,
+  100% {
+    transform: scale(0.94);
+    opacity: 0.48;
+  }
+  50% {
+    transform: scale(1.08);
+    opacity: 0.86;
+  }
+}
+
+@keyframes glass-sweep {
+  0%,
+  100% {
+    transform: translateX(-120%);
+  }
+  55% {
+    transform: translateX(140%);
+  }
+}
+
+@keyframes particle-rise {
+  0% {
+    transform: translate3d(0, 0, 0) scale(0.8);
+    opacity: 0;
+  }
+  15% {
+    opacity: 1;
+  }
+  100% {
+    transform: translate3d(18px, -220px, 0) scale(0.2);
+    opacity: 0;
+  }
+}
+
+@keyframes build-grow-left {
+  0%,
+  100% {
+    height: 82px;
+  }
+  50% {
+    height: 106px;
+  }
+}
+
+@keyframes build-grow-right {
+  0%,
+  100% {
+    height: 122px;
+  }
+  50% {
+    height: 146px;
+  }
+}
+
+@keyframes orb-drift {
+  0%,
+  100% {
+    transform: translate3d(0, 0, 0) scale(1);
+  }
+  50% {
+    transform: translate3d(48px, 24px, 0) scale(1.08);
+  }
+}
+
+@keyframes grid-slide {
+  from {
+    transform: perspective(900px) rotateX(75deg) translateY(0);
+  }
+  to {
+    transform: perspective(900px) rotateX(75deg) translateY(70px);
   }
 }
 
@@ -450,6 +638,7 @@ label small,
 }
 
 .section-heading h2,
+.page-title,
 .admin-title {
   margin: 14px 0 10px;
   font-size: clamp(2rem, 4vw, 3.2rem);
@@ -647,6 +836,17 @@ input[type="range"] {
 .faq-item p {
   margin: 12px 0 0;
   line-height: 1.7;
+}
+
+.reveal {
+  opacity: 0;
+  transform: translate3d(0, 44px, 0) scale(0.985);
+  transition: opacity 700ms ease, transform 900ms cubic-bezier(0.2, 0.8, 0.2, 1);
+}
+
+.reveal.is-visible {
+  opacity: 1;
+  transform: translate3d(0, 0, 0) scale(1);
 }
 
 .site-footer {

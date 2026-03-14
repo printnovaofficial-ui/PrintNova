@@ -28,6 +28,11 @@
     <link rel="stylesheet" href="./styles.css" />
   </head>
   <body>
+    <div class="motion-layer" aria-hidden="true">
+      <span class="motion-orb orb-a"></span>
+      <span class="motion-orb orb-b"></span>
+      <span class="motion-grid"></span>
+    </div>
     <div class="page-shell">
       <header class="site-header">
         <a class="brand" href="#top" aria-label="PrintNova home">
@@ -76,9 +81,11 @@
           <div class="hero-visual" aria-hidden="true">
             <div class="printer-card">
               <div class="printer-glow"></div>
+              <div class="printer-particles" id="printer-particles"></div>
               <div class="printer-frame">
                 <div class="printer-topbar"></div>
                 <div class="printer-gantry"></div>
+                <div class="scanner-line"></div>
                 <div class="printer-bed"></div>
                 <div class="printer-head">
                   <div class="printer-nozzle"></div>
@@ -122,7 +129,7 @@
             </article>
             <article class="info-card">
               <h3>Material guidance</h3>
-              <p>Customers can move to the dedicated filament guide page before ordering, which lowers friction and improves decision-making.</p>
+              <p>Customers can move to the dedicated filament guide page before ordering, while current order availability stays focused on PLA in black and white.</p>
             </article>
           </div>
         </section>
@@ -136,7 +143,7 @@
             <article class="pricing-card pricing-feature">
               <span class="pricing-label">Current material pricing</span>
               <h3>PLA = ₹5 per gram + delivery charges</h3>
-              <p>This is one of the “for now” values and can be updated from the admin panel later.</p>
+              <p>Current available filament for orders is PLA only.</p>
             </article>
             <article class="pricing-card">
               <span class="pricing-label">Filament cost</span>
@@ -305,7 +312,7 @@
                   <li><span>Layer height</span><strong id="summary-layer">3 / 5</strong></li>
                   <li><span>Infill</span><strong id="summary-infill">20%</strong></li>
                   <li><span>Quality</span><strong id="summary-quality">Low</strong></li>
-                  <li><span>Color</span><strong id="summary-color">Red</strong></li>
+                  <li><span>Color</span><strong id="summary-color">Black</strong></li>
                   <li><span>Material</span><strong id="summary-material">PLA</strong></li>
                   <li><span>Service area</span><strong>Delhi NCR</strong></li>
                 </ul>
@@ -335,7 +342,7 @@
           <div class="section-heading">
             <p class="eyebrow">Gallery</p>
             <h2>Recent work and sample outputs.</h2>
-            <p class="section-note">Gallery items can be uploaded from the admin page only.</p>
+            <p class="section-note">Gallery is currently curated by PrintNova.</p>
           </div>
           <div id="gallery-grid" class="gallery-grid"></div>
         </section>
@@ -400,7 +407,6 @@
         </div>
         <div class="footer-actions">
           <a class="button button-secondary" href="./filament.html">Open Filament Guide</a>
-          <a class="button button-secondary" href="./admin.html">Admin Updates</a>
         </div>
       </footer>
     </div>

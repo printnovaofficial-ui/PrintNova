@@ -1,11 +1,10 @@
 const STORAGE_KEYS = {
-  settings: "printnova-settings-v2",
   gallery: "printnova-gallery-v2",
   orders: "printnova-orders-v2",
 };
 
 const DEFAULT_SETTINGS = {
-  colors: ["Red", "White", "Black", "Gray"],
+  colors: ["Black", "White"],
   materials: ["PLA"],
   pricing: {
     plaPerGram: 5,
@@ -98,22 +97,12 @@ const writeJson = (key, value) => {
   localStorage.setItem(key, JSON.stringify(value));
 };
 
-const getSettings = () => {
-  const stored = safeReadJson(STORAGE_KEYS.settings, null);
-  const settings = stored
-    ? { ...DEFAULT_SETTINGS, ...stored, pricing: { ...DEFAULT_SETTINGS.pricing, ...stored.pricing } }
-    : { ...DEFAULT_SETTINGS, pricing: { ...DEFAULT_SETTINGS.pricing } };
-
-  if (!Array.isArray(settings.colors) || settings.colors.length === 0) {
-    settings.colors = [...DEFAULT_SETTINGS.colors];
-  }
-
-  if (!Array.isArray(settings.materials) || settings.materials.length === 0) {
-    settings.materials = [...DEFAULT_SETTINGS.materials];
-  }
-
-  return settings;
-};
+const getSettings = () => ({
+  ...DEFAULT_SETTINGS,
+  colors: [...DEFAULT_SETTINGS.colors],
+  materials: [...DEFAULT_SETTINGS.materials],
+  pricing: { ...DEFAULT_SETTINGS.pricing },
+});
 
 const getGallery = () => {
   const stored = safeReadJson(STORAGE_KEYS.gallery, null);
@@ -135,6 +124,22 @@ const materialInput = document.querySelector("#material");
 const formError = document.querySelector("#form-error");
 const successPanel = document.querySelector("#success-panel");
 const galleryGrid = document.querySelector("#gallery-grid");
+const printerParticles = document.querySelector("#printer-particles");
+
+const createPrinterParticles = () => {
+  if (!printerParticles) {
+    return;
+  }
+
+  const particleMarkup = Array.from({ length: 16 }, (_, index) => {
+    const left = 8 + ((index * 13) % 78);
+    const delay = (index % 8) * 0.45;
+    const duration = 4.6 + (index % 5) * 0.55;
+    return `<span class="particle" style="left:${left}%;animation-delay:${delay}s;animation-duration:${duration}s;"></span>`;
+  }).join("");
+
+  printerParticles.innerHTML = particleMarkup;
+};
 
 const syncRangeOutputs = () => {
   document.querySelector("#layer-height-value").textContent = layerHeightInput.value;
@@ -175,6 +180,63 @@ const renderGallery = () => {
       `
     )
     .join("");
+};
+
+const setupRevealAnimations = () => {
+  const targets = document.querySelectorAll(
+    ".hero-copy, .hero-visual, .trust-strip article, .content-section .section-heading, .info-card, .pricing-card, .notice-panel, .order-form, .summary-card, .gallery-card, .faq-item, .filament-card"
+  );
+
+  targets.forEach((element, index) => {
+    element.classList.add("reveal");
+    element.style.transitionDelay = `${Math.min(index % 6, 5) * 70}ms`;
+  });
+
+  const observer = new IntersectionObserver(
+    (entries) => {
+      entries.forEach((entry) => {
+        if (entry.isIntersecting) {
+          entry.target.classList.add("is-visible");
+        }
+      });
+    },
+    { threshold: 0.14 }
+  );
+
+  targets.forEach((element) => observer.observe(element));
+};
+
+const setupTiltMotion = () => {
+  const cards = document.querySelectorAll(".printer-card, .info-card, .pricing-card, .summary-card, .gallery-card, .filament-card");
+
+  cards.forEach((card) => {
+    card.addEventListener("mousemove", (event) => {
+      const rect = card.getBoundingClientRect();
+      const rotateX = ((event.clientY - rect.top) / rect.height - 0.5) * -8;
+      const rotateY = ((event.clientX - rect.left) / rect.width - 0.5) * 10;
+      card.style.transform = `perspective(1000px) rotateX(${rotateX}deg) rotateY(${rotateY}deg) translateY(-4px)`;
+    });
+
+    card.addEventListener("mouseleave", () => {
+      card.style.transform = "";
+    });
+  });
+};
+
+const setupHeroParallax = () => {
+  const heroCopy = document.querySelector(".hero-copy");
+  const heroVisual = document.querySelector(".hero-visual");
+
+  if (!heroCopy || !heroVisual) {
+    return;
+  }
+
+  window.addEventListener("mousemove", (event) => {
+    const x = (event.clientX / window.innerWidth - 0.5) * 18;
+    const y = (event.clientY / window.innerHeight - 0.5) * 14;
+    heroCopy.style.transform = `translate3d(${x * -0.3}px, ${y * -0.25}px, 0)`;
+    heroVisual.style.transform = `translate3d(${x * 0.45}px, ${y * 0.4}px, 0)`;
+  });
 };
 
 const buildEmailBody = (payload) => {
@@ -364,10 +426,6 @@ if (orderForm) {
   });
 }
 
-if (!safeReadJson(STORAGE_KEYS.settings, null)) {
-  writeJson(STORAGE_KEYS.settings, DEFAULT_SETTINGS);
-}
-
 if (!safeReadJson(STORAGE_KEYS.gallery, null)) {
   writeJson(STORAGE_KEYS.gallery, DEFAULT_GALLERY);
 }
@@ -376,9 +434,12 @@ populateSelections();
 renderGallery();
 syncRangeOutputs();
 syncSelectOutputs();
+createPrinterParticles();
+setupRevealAnimations();
+setupTiltMotion();
+setupHeroParallax();
 
 window.addEventListener("storage", () => {
-  populateSelections();
   renderGallery();
   syncSelectOutputs();
 });
