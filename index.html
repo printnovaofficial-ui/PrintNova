@@ -3,10 +3,10 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>PrintNova | Premium 3D Printing in Delhi NCR</title>
+    <title>PrintNova | 3D Printing in Delhi NCR</title>
     <meta
       name="description"
-      content="PrintNova provides premium 3D printing for Delhi NCR with fast quoting, custom design support, and high-quality prints for action figures and everyday products."
+      content="PrintNova offers 3D printing in Delhi NCR with instant STL uploads, weight and price estimation, material and color options, shipping estimates, order tracking, and local support."
     />
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
@@ -18,6 +18,11 @@
     <link rel="stylesheet" href="./styles.css" />
   </head>
   <body>
+    <div class="cursor-glow" aria-hidden="true"></div>
+    <div class="extruder-cursor" aria-hidden="true">
+      <img src="./bambu-a1-extruder-cursor.svg" alt="" />
+    </div>
+
     <div class="site-shell">
       <header class="topbar">
         <a class="brand" href="#home" aria-label="PrintNova home">
@@ -28,128 +33,90 @@
           </span>
         </a>
         <nav class="nav">
-          <a href="#services">Services</a>
-          <a href="#pricing">Pricing</a>
-          <a href="#process">Process</a>
-          <a href="#order">Order</a>
+          <a href="#quote">Quote</a>
+          <a href="#gallery">Gallery</a>
+          <a href="#tracking">Tracking</a>
+          <a href="#faq">FAQ</a>
+          <a href="#support">Support</a>
+          <a href="./admin.html">Admin</a>
         </nav>
-        <a class="cta-link" href="#order">Start Your Print</a>
+        <a class="cta-link magnetic" href="#quote">Start Your Quote</a>
       </header>
 
       <main id="home">
         <section class="hero section reveal">
           <div class="hero-copy">
-            <div class="eyebrow">Built for founders, makers, and detail obsessives.</div>
-            <h1>Professional 3D printing in Delhi NCR, with quality you can actually show off.</h1>
+            <div class="eyebrow">Built for makers in Delhi NCR.</div>
+            <h1>Upload your file. Get a live quote. Send the order directly.</h1>
             <p class="hero-text">
-              PrintNova helps teams, creators, and collectors turn ideas into
-              polished physical products with precise prints, design support,
-              and dependable Delhi NCR delivery. From prototypes to shelf-ready
-              collectibles, the goal is simple: parts that look intentional,
-              not accidental.
+              Instant STL-based weight estimation, material and color choices, shipping estimate,
+              and a single order flow that goes straight to your admin dashboard.
             </p>
             <div class="usp-card">
-              <span class="usp-label">Why teams choose PrintNova</span>
-              <h2>Fast quoting, cleaner finishes, and local support that does not vanish after one WhatsApp message.</h2>
-              <p>
-                A focused Delhi NCR workflow means quicker coordination, clearer
-                timelines, and print guidance from file check to final handoff.
-                Professional output, minus the drama. Your printer's midlife
-                crisis stays our problem, not yours.
-              </p>
+              <span class="usp-label">Clear pricing rule</span>
+              <h2>₹5 per gram with a ₹299 minimum order.</h2>
+              <ul class="usp-points">
+                <li>Mandatory address, phone number, and email ID</li>
+                <li>Optional file upload with a 24-hour support disclaimer</li>
+                <li>Admin can accept, reject, and update available colors</li>
+              </ul>
             </div>
             <div class="hero-actions">
-              <a class="button button-primary" href="#order">Place an Order</a>
-              <a class="button button-secondary" href="#pricing">See Pricing</a>
+              <a class="button button-primary magnetic" href="#quote">Place an Order</a>
+              <a class="button button-secondary magnetic" href="./admin.html">Open Admin Site</a>
             </div>
             <ul class="hero-metrics">
               <li>
-                <strong>Free</strong>
-                <span>first print under 50g</span>
+                <strong>₹5/g</strong>
+                <span>base print price</span>
               </li>
               <li>
-                <strong>₹5-₹7/g</strong>
-                <span>based on complexity</span>
+                <strong>₹299</strong>
+                <span>minimum order</span>
               </li>
               <li>
-                <strong>1kg max</strong>
-                <span>per single print job</span>
+                <strong>220×220×250mm</strong>
+                <span>single-part limit</span>
               </li>
             </ul>
           </div>
 
           <div class="hero-visual" aria-hidden="true">
             <div class="printer-stage">
+              <div class="printer-orbit orbit-one"></div>
+              <div class="printer-orbit orbit-two"></div>
               <div class="printer-rail"></div>
               <div class="printer-head"></div>
               <div class="printer-beam"></div>
               <div class="build build-one"></div>
               <div class="build build-two"></div>
               <div class="build build-three"></div>
+              <div class="printer-pulse pulse-one"></div>
+              <div class="printer-pulse pulse-two"></div>
               <div class="halo"></div>
             </div>
-            <div class="visual-caption">Precision builds, layered in motion.</div>
+            <div class="visual-caption">Quote, order, and admin workflow in one static setup.</div>
           </div>
         </section>
 
         <section class="feature-band reveal">
           <div class="band-card">
-            <span class="band-label">Coverage</span>
-            <h2>Serving Delhi NCR only</h2>
-            <p>
-              Every order is screened for Delhi NCR fulfillment so delivery,
-              coordination, and support stay fast and reliable.
-            </p>
+            <span class="band-label">Public site + admin site</span>
+            <h2>Customers order here. Admin manages everything there.</h2>
+            <p>The admin page reads incoming orders, updates statuses, and changes available colors.</p>
           </div>
           <div class="band-grid">
             <article class="mini-panel">
-              <span>Speciality</span>
-              <strong>Action figures</strong>
+              <span>Uploads</span>
+              <strong>STL auto-weight supported</strong>
             </article>
             <article class="mini-panel">
-              <span>Also built for</span>
-              <strong>Daily-use products</strong>
+              <span>Orders</span>
+              <strong>Accept or reject from admin</strong>
             </article>
             <article class="mini-panel">
-              <span>File support</span>
-              <strong>STL / MTF or custom design request</strong>
-            </article>
-          </div>
-        </section>
-
-        <section class="services section reveal" id="services">
-          <div class="section-heading">
-            <div class="eyebrow">Why PrintNova</div>
-            <h2>Built for serious printing, without the friction.</h2>
-          </div>
-          <div class="service-grid">
-            <article class="service-card tilt-card">
-              <h3>First order advantage</h3>
-              <p>
-                New customers get one free print if the model stays under 50
-                grams.
-              </p>
-            </article>
-            <article class="service-card tilt-card">
-              <h3>Transparent pricing</h3>
-              <p>
-                Most jobs are priced between ₹5 and ₹7 per gram depending on
-                model complexity and finishing needs.
-              </p>
-            </article>
-            <article class="service-card tilt-card">
-              <h3>Design or upload</h3>
-              <p>
-                Send your own STL or MTF file, or ask PrintNova to help design
-                the product before printing.
-              </p>
-            </article>
-            <article class="service-card tilt-card">
-              <h3>Quality-first output</h3>
-              <p>
-                Clean layers, solid finish, and consistent print quality built
-                for display pieces and useful everyday objects.
-              </p>
+              <span>Catalog</span>
+              <strong>Color list editable by admin</strong>
             </article>
           </div>
         </section>
@@ -157,173 +124,353 @@
         <section class="pricing section reveal" id="pricing">
           <div class="section-heading">
             <div class="eyebrow">Pricing and limits</div>
-            <h2>Simple constraints. Clear expectations.</h2>
+            <h2>Simple rules before you upload.</h2>
           </div>
           <div class="pricing-layout">
             <article class="price-card primary-card">
-              <span class="price-label">Standard rate</span>
-              <h3>₹5-₹7 per gram</h3>
-              <p>
-                Final price depends on model geometry, total material usage, and
-                any extra design involvement.
-              </p>
+              <span class="price-label">Base pricing</span>
+              <h3>₹5 per gram</h3>
+              <p>Based on STL volume or the manual size inputs, then adjusted by material and settings.</p>
             </article>
             <article class="price-card">
-              <span class="price-label">Free first print</span>
-              <h3>Under 50g only</h3>
-              <p>
-                Best for small test parts, miniature accessories, and simple
-                first-time orders.
-              </p>
+              <span class="price-label">Minimum order</span>
+              <h3>₹299</h3>
+              <p>Any smaller print still starts at the minimum order price.</p>
             </article>
             <article class="price-card">
-              <span class="price-label">Maximum size</span>
-              <h3>Up to 1kg</h3>
-              <p>
-                Larger projects can be split into print-ready parts if the design
-                allows it.
-              </p>
+              <span class="price-label">Size limit</span>
+              <h3>220×220×250mm</h3>
+              <p>Larger jobs need to be split into separate parts before production.</p>
             </article>
           </div>
         </section>
 
-        <section class="process section reveal" id="process">
+        <section class="quote section reveal" id="quote">
+          <div class="section-heading">
+            <div class="eyebrow">Order and estimate</div>
+            <h2>Mandatory details first, file upload optional.</h2>
+            <p class="section-note">
+              If an STL file is uploaded, the site calculates model volume and estimated weight from the file.
+              If no file is uploaded, the estimate uses the dimensions entered below and support follows up within 24 hours.
+            </p>
+          </div>
+
+          <div class="quote-layout">
+            <form class="quote-panel order-form" id="quote-form">
+              <label>
+                Full name
+                <input id="customer-name" type="text" required placeholder="Your full name" />
+              </label>
+
+              <label>
+                Phone number
+                <input id="customer-phone" type="tel" required placeholder="+91 98XXXXXXXX" pattern="[0-9+ ()-]{10,}" />
+              </label>
+
+              <label>
+                Email ID
+                <input id="customer-email" type="email" required placeholder="you@example.com" />
+              </label>
+
+              <label>
+                Delivery address
+                <textarea id="customer-address" rows="3" required placeholder="Full Delhi NCR delivery address"></textarea>
+              </label>
+
+              <label class="span-2 upload-field">
+                Upload STL / 3MF file (optional)
+                <input id="model-file" type="file" accept=".stl,.3mf" />
+              </label>
+
+              <div class="span-2 disclaimer-card" id="file-disclaimer">
+                No file uploaded. Our support team will contact you regarding your purchase within 24 hours.
+              </div>
+
+              <label>
+                Material
+                <select id="material">
+                  <option value="pla">PLA</option>
+                  <option value="petg">PETG</option>
+                  <option value="abs">ABS</option>
+                  <option value="tpu">TPU</option>
+                </select>
+              </label>
+
+              <label>
+                Color
+                <select id="color"></select>
+              </label>
+
+              <label>
+                Quality
+                <select id="quality">
+                  <option value="draft">Draft</option>
+                  <option value="standard" selected>Standard</option>
+                  <option value="fine">Fine</option>
+                </select>
+              </label>
+
+              <label>
+                Layer height
+                <select id="layer-height">
+                  <option value="0.28">0.28 mm</option>
+                  <option value="0.2" selected>0.20 mm</option>
+                  <option value="0.12">0.12 mm</option>
+                </select>
+              </label>
+
+              <label>
+                Infill
+                <input id="infill" type="range" min="10" max="80" step="5" value="20" />
+                <span class="field-inline"><strong id="infill-value">20%</strong> internal fill</span>
+              </label>
+
+              <label>
+                Length (mm)
+                <input id="length" type="number" min="10" max="220" value="120" />
+              </label>
+
+              <label>
+                Width (mm)
+                <input id="width" type="number" min="10" max="220" value="80" />
+              </label>
+
+              <label>
+                Height (mm)
+                <input id="height" type="number" min="10" max="250" value="60" />
+              </label>
+
+              <label>
+                Quantity
+                <input id="quantity" type="number" min="1" max="20" value="1" />
+              </label>
+
+              <label>
+                Delivery zone
+                <select id="shipping-zone">
+                  <option value="delhi">Delhi</option>
+                  <option value="ncr">Gurugram / Noida / NCR</option>
+                  <option value="express">Express local courier</option>
+                </select>
+              </label>
+
+              <label class="span-2">
+                Order notes
+                <textarea id="customer-notes" rows="4" placeholder="Mention use case, strength needs, finish expectations, or if you need design help."></textarea>
+              </label>
+
+              <div class="span-2 size-note">
+                <strong>Print size limit:</strong> 220mm × 220mm × 250mm per part. Oversize models need splitting.
+              </div>
+
+              <button class="button button-primary submit-button span-2" type="submit">Send Order to Admin</button>
+              <div class="span-2 form-status" id="order-status" aria-live="polite"></div>
+            </form>
+
+            <aside class="quote-results contact-panel">
+              <div class="quote-preview">
+                <div class="preview-stage" id="preview-stage">
+                  <canvas id="model-preview" width="360" height="240" aria-label="Uploaded model preview"></canvas>
+                </div>
+                <div class="preview-meta">
+                  <strong id="file-name">No file uploaded yet</strong>
+                  <span id="file-meta">Upload STL for geometry-based weight. 3MF currently uses manual dimensions.</span>
+                </div>
+              </div>
+
+              <div class="calc-grid">
+                <article class="calc-card">
+                  <span>Estimated weight</span>
+                  <strong id="weight-output">59 g</strong>
+                </article>
+                <article class="calc-card">
+                  <span>Print price</span>
+                  <strong id="print-price-output">₹299</strong>
+                </article>
+                <article class="calc-card">
+                  <span>Shipping</span>
+                  <strong id="shipping-output">₹80</strong>
+                </article>
+                <article class="calc-card emphasis">
+                  <span>Total estimate</span>
+                  <strong id="total-output">₹379</strong>
+                </article>
+              </div>
+
+              <div class="summary-list">
+                <div><span>Weight source</span><strong id="weight-source-output">Manual dimensions</strong></div>
+                <div><span>Estimated print time</span><strong id="print-time-output">5.8 hrs</strong></div>
+                <div><span>Estimated delivery</span><strong id="delivery-output">2-3 days</strong></div>
+                <div><span>Filament color</span><strong id="color-output">Arctic White</strong></div>
+                <div><span>Material</span><strong id="material-output">PLA</strong></div>
+              </div>
+            </aside>
+          </div>
+        </section>
+
+        <section class="gallery section" id="gallery">
+          <div class="section-heading">
+            <div class="eyebrow">Sample prints gallery</div>
+            <h2>3D printing visuals that appear as you scroll.</h2>
+            <p class="section-note">Five PNG references from the web, kept inside the existing neon style.</p>
+          </div>
+          <div class="image-stream">
+            <article class="print-shot reveal">
+              <img src="https://commons.wikimedia.org/wiki/Special:Redirect/file/3D%20printer.png" alt="3D printer setup" loading="lazy" decoding="async" />
+              <div class="print-shot-copy"><span>Machine</span><strong>Printer setup</strong></div>
+            </article>
+            <article class="print-shot reveal">
+              <img src="https://commons.wikimedia.org/wiki/Special:Redirect/file/3D%20Printer%20Extruder.png" alt="3D printer extruder" loading="lazy" decoding="async" />
+              <div class="print-shot-copy"><span>Hardware</span><strong>Extruder detail</strong></div>
+            </article>
+            <article class="print-shot reveal">
+              <img src="https://commons.wikimedia.org/wiki/Special:Redirect/file/3DBenchy.png" alt="3DBenchy benchmark model" loading="lazy" decoding="async" />
+              <div class="print-shot-copy"><span>Benchmark</span><strong>3DBenchy</strong></div>
+            </article>
+            <article class="print-shot reveal">
+              <img src="https://commons.wikimedia.org/wiki/Special:Redirect/file/3DBenchy%202025%20release.png" alt="3DBenchy 2025 release model" loading="lazy" decoding="async" />
+              <div class="print-shot-copy"><span>Object</span><strong>Benchy release</strong></div>
+            </article>
+            <article class="print-shot reveal">
+              <img src="https://commons.wikimedia.org/wiki/Special:Redirect/file/3-D%20printed%20car%20%2815951381358%29.png" alt="3D printed car" loading="lazy" decoding="async" />
+              <div class="print-shot-copy"><span>Scale</span><strong>Printed car</strong></div>
+            </article>
+          </div>
+        </section>
+
+        <section class="services section reveal" id="services">
           <div class="section-heading">
             <div class="eyebrow">Workflow</div>
-            <h2>From idea to finished print.</h2>
+            <h2>From upload to admin review.</h2>
           </div>
-          <div class="timeline">
-            <article class="timeline-item">
-              <span>01</span>
-              <h3>Send details</h3>
-              <p>
-                Share your phone number, email, address, and a description of
-                what you want made.
-              </p>
+          <div class="service-grid">
+            <article class="service-card tilt-card">
+              <h3>Mandatory contact data</h3>
+              <p>Name, phone number, email ID, and address are required before an order can be sent.</p>
             </article>
-            <article class="timeline-item">
-              <span>02</span>
-              <h3>Upload or request design</h3>
-              <p>
-                Attach an STL or MTF file if you have one, or describe the
-                product and ask for design support.
-              </p>
+            <article class="service-card tilt-card">
+              <h3>Automatic estimate</h3>
+              <p>Weight, price, shipping, time, and delivery update with the selected settings.</p>
             </article>
-            <article class="timeline-item">
-              <span>03</span>
-              <h3>Review and print</h3>
-              <p>
-                PrintNova checks feasibility, confirms pricing, and starts the
-                print for Delhi NCR fulfillment.
-              </p>
+            <article class="service-card tilt-card">
+              <h3>Optional file upload</h3>
+              <p>No file is still allowed. The site shows a support disclaimer and the admin sees that note too.</p>
+            </article>
+            <article class="service-card tilt-card">
+              <h3>Admin action</h3>
+              <p>Orders land in the admin page where they can be accepted, rejected, or moved through production.</p>
             </article>
           </div>
         </section>
 
-        <section class="showcase section reveal">
+        <section class="tracking section reveal" id="tracking">
           <div class="section-heading">
-            <div class="eyebrow">Craft categories</div>
-            <h2>Made for display shelves and everyday spaces.</h2>
+            <div class="eyebrow">Order tracking</div>
+            <h2>Track a submitted order.</h2>
+            <p class="section-note">Enter the order ID assigned after form submission.</p>
           </div>
-          <div class="showcase-grid">
+          <div class="tracking-layout">
+            <div class="tracking-form order-form">
+              <label class="span-2">
+                Order ID
+                <input id="tracking-id" type="text" placeholder="Example: PN-24031" />
+              </label>
+              <button class="button button-primary submit-button" id="tracking-button" type="button">Check Status</button>
+            </div>
+            <aside class="tracking-panel contact-panel" id="tracking-result">
+              <div class="contact-chip">Latest update</div>
+              <strong id="tracking-status">Ready for lookup</strong>
+              <p id="tracking-copy">Enter an order ID to see the current order state from stored admin updates.</p>
+            </aside>
+          </div>
+        </section>
+
+        <section class="reviews section reveal" id="reviews">
+          <div class="section-heading">
+            <div class="eyebrow">Customer reviews</div>
+            <h2>What local buyers say.</h2>
+          </div>
+          <div class="showcase-grid reviews-grid">
             <article class="showcase-card figure-card">
               <div class="card-glow"></div>
-              <h3>Action figures</h3>
-              <p>
-                Character models, stylized collectibles, and detail-driven print
-                work with visual impact.
-              </p>
+              <h3>Prototype fit check</h3>
+              <p>"Quick response, accurate dimensions, and the PETG part fit on first try."</p>
+              <small>Rohit, Noida</small>
             </article>
             <article class="showcase-card utility-card">
               <div class="card-glow"></div>
-              <h3>Daily-use products</h3>
-              <p>
-                Functional organizers, holders, fixtures, and practical custom
-                pieces for real-world use.
-              </p>
+              <h3>Display print quality</h3>
+              <p>"Layer lines were clean and the finish looked good straight out of the box."</p>
+              <small>Ananya, Delhi</small>
             </article>
           </div>
         </section>
 
-        <section class="contact section reveal" id="order">
+        <section class="faq section reveal" id="faq">
           <div class="section-heading">
-            <div class="eyebrow">Order now</div>
-            <h2>Send your print request.</h2>
-            <p class="section-note">
-              Required fields are enforced. File upload is optional.
-            </p>
+            <div class="eyebrow">FAQ</div>
+            <h2>File types, materials, and turnaround.</h2>
+          </div>
+          <div class="faq-grid">
+            <details class="faq-item" open>
+              <summary>Which file types do you accept?</summary>
+              <p>STL and 3MF are accepted. Geometry-based auto-weight currently works for STL uploads on the public site.</p>
+            </details>
+            <details class="faq-item">
+              <summary>What happens if I do not upload a file?</summary>
+              <p>You can still place the order. The site shows a disclaimer and support follows up within 24 hours.</p>
+            </details>
+            <details class="faq-item">
+              <summary>Which materials are available?</summary>
+              <p>PLA, PETG, ABS, and TPU are listed in the estimator. Available colors can be updated from the admin page.</p>
+            </details>
+            <details class="faq-item">
+              <summary>What are the size limits?</summary>
+              <p>Single-part jobs should stay within 220mm × 220mm × 250mm. Bigger models need splitting.</p>
+            </details>
+          </div>
+        </section>
+
+        <section class="policies section reveal" id="terms">
+          <div class="section-heading">
+            <div class="eyebrow">Terms and refund policy</div>
+            <h2>Clear order conditions.</h2>
+          </div>
+          <div class="policy-grid">
+            <article class="price-card">
+              <span class="price-label">Terms</span>
+              <p>Quotes remain estimates until production review is complete. Unprintable geometry may require revision or part splitting.</p>
+            </article>
+            <article class="price-card">
+              <span class="price-label">Refunds</span>
+              <p>Refunds apply before production starts. Custom prints already in production are only covered for damage or manufacturing defects.</p>
+            </article>
+            <article class="price-card">
+              <span class="price-label">Support</span>
+              <p>If no file is uploaded, or if the file fails validation, support reaches out within 24 hours to continue the order.</p>
+            </article>
+          </div>
+        </section>
+
+        <section class="contact section reveal" id="support">
+          <div class="section-heading">
+            <div class="eyebrow">Contact and support</div>
+            <h2>Need help before ordering?</h2>
+            <p class="section-note">This support page stays separate from the direct-to-admin order flow above.</p>
           </div>
           <div class="contact-layout">
-            <form
-              class="order-form"
-              action="https://formsubmit.co/PrintNovaofficial@gmail.com"
-              method="POST"
-              enctype="multipart/form-data"
-            >
-              <input type="hidden" name="_subject" value="New PrintNova order request" />
-              <input type="hidden" name="_captcha" value="false" />
-              <input type="hidden" name="_template" value="table" />
-              <input type="hidden" name="_next" value="https://formsubmit.co/thank-you" />
-
-              <label>
-                Full name
-                <input type="text" name="name" placeholder="Your name" required />
+            <div class="order-form support-card">
+              <label class="span-2">
+                Support process
+                <textarea rows="6" readonly>Use the order section above for new purchases. If you do not have a print-ready file, submit the order without a file and our support team will contact you within 24 hours to help with the next step.</textarea>
               </label>
-              <label>
-                Phone number
-                <input
-                  type="tel"
-                  name="phone"
-                  placeholder="+91 98XXXXXXXX"
-                  pattern="[0-9+ ()-]{10,}"
-                  required
-                />
-              </label>
-              <label>
-                Email ID
-                <input type="email" name="email" placeholder="you@example.com" required />
-              </label>
-              <label>
-                Delivery address
-                <textarea
-                  name="address"
-                  rows="3"
-                  placeholder="Delhi NCR address"
-                  required
-                ></textarea>
-              </label>
-              <label>
-                Project description
-                <textarea
-                  name="description"
-                  rows="5"
-                  placeholder="What do you want to print? Mention size, use case, colors, or if you need help designing it."
-                  required
-                ></textarea>
-              </label>
-              <label>
-                Upload STL / MTF file (optional)
-                <input type="file" name="attachment" accept=".stl,.mtf,.zip,.obj,.3mf" />
-              </label>
-              <button class="button button-primary submit-button" type="submit">
-                Send Order Request
-              </button>
-            </form>
-
+            </div>
             <aside class="contact-panel">
               <div class="contact-chip">Direct contact</div>
               <a href="mailto:PrintNovaofficial@gmail.com">PrintNovaofficial@gmail.com</a>
-              <p>
-                Orders are accepted for Delhi NCR only. If you already have a
-                file, attach it. If not, describe the product and PrintNova can
-                help with design.
-              </p>
-              <a
-                class="instagram-card"
-                href="https://www.instagram.com/printnovaofficials/"
-                target="_blank"
-                rel="noreferrer"
-              >
+              <a href="tel:+919800000000">+91 98000 00000</a>
+              <p>Delhi NCR orders only. For admin management, open the linked admin page in the same browser.</p>
+              <a class="instagram-card magnetic" href="https://www.instagram.com/printnovaofficials/" target="_blank" rel="noreferrer">
                 <span>Instagram</span>
                 <strong>@printnovaofficials</strong>
                 <small>See visual work and product inspiration</small>

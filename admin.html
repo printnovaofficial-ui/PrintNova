@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>PrintNova Admin</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;700&family=Sora:wght@400;600;700;800&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="./styles.css" />
+  </head>
+  <body class="admin-body">
+    <div class="site-shell admin-shell">
+      <header class="topbar admin-topbar">
+        <a class="brand" href="./index.html" aria-label="Back to PrintNova">
+          <span class="brand-mark">PN</span>
+          <span class="brand-text">
+            <strong>PrintNova Admin</strong>
+            <small>Orders • Colors • Status</small>
+          </span>
+        </a>
+        <nav class="nav">
+          <a href="#settings">Settings</a>
+          <a href="#orders">Orders</a>
+          <a href="#summary">Summary</a>
+          <a href="./index.html">Public Site</a>
+        </nav>
+      </header>
+
+      <main>
+        <section class="section reveal">
+          <div class="section-heading">
+            <div class="eyebrow">Admin dashboard</div>
+            <h1 class="admin-title">Manage incoming orders and live catalog data.</h1>
+            <p class="section-note">This dashboard updates available colors on the public site and lets you accept or reject orders.</p>
+          </div>
+        </section>
+
+        <section class="section reveal" id="summary">
+          <div class="calc-grid admin-summary-grid">
+            <article class="calc-card"><span>Total orders</span><strong id="summary-total">0</strong></article>
+            <article class="calc-card"><span>Pending review</span><strong id="summary-pending">0</strong></article>
+            <article class="calc-card"><span>Accepted</span><strong id="summary-accepted">0</strong></article>
+            <article class="calc-card emphasis"><span>Rejected</span><strong id="summary-rejected">0</strong></article>
+          </div>
+        </section>
+
+        <section class="section reveal" id="settings">
+          <div class="section-heading">
+            <div class="eyebrow">Available colors</div>
+            <h2>Update the public color options.</h2>
+          </div>
+          <div class="quote-layout">
+            <form class="order-form" id="settings-form">
+              <label class="span-2">
+                Color list
+                <textarea id="admin-colors" rows="8" placeholder="One color per line"></textarea>
+              </label>
+              <button class="button button-primary submit-button span-2" type="submit">Save Colors</button>
+              <div class="span-2 form-status" id="settings-status" aria-live="polite"></div>
+            </form>
+            <aside class="contact-panel">
+              <div class="contact-chip">How it works</div>
+              <p>Each line becomes one selectable filament color on the public order form.</p>
+              <p>Use the same browser profile for the public site and admin site so they share the same storage.</p>
+            </aside>
+          </div>
+        </section>
+
+        <section class="section reveal" id="orders">
+          <div class="section-heading">
+            <div class="eyebrow">Incoming orders</div>
+            <h2>Accept, reject, or update status.</h2>
+          </div>
+          <div class="admin-orders" id="orders-list"></div>
+        </section>
+      </main>
+    </div>
+
+    <script src="./admin.js"></script>
+  </body>
+</html>
