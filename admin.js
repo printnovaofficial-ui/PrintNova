@@ -1,20 +1,11 @@
 const STORAGE_KEYS = {
-  orders: "printnova-orders",
-  settings: "printnova-settings",
+  settings: "printnova-settings-v2",
+  gallery: "printnova-gallery-v2",
+  orders: "printnova-orders-v2",
+  auth: "printnova-admin-auth-v1",
 };
 
-const DEFAULT_SETTINGS = {
-  colors: ["Arctic White", "Graphite Black", "Signal Red", "Ocean Blue", "Forest Green"],
-};
-
-const colorsField = document.querySelector("#admin-colors");
-const settingsForm = document.querySelector("#settings-form");
-const settingsStatus = document.querySelector("#settings-status");
-const ordersList = document.querySelector("#orders-list");
-const summaryTotal = document.querySelector("#summary-total");
-const summaryPending = document.querySelector("#summary-pending");
-const summaryAccepted = document.querySelector("#summary-accepted");
-const summaryRejected = document.querySelector("#summary-rejected");
+const DEFAULT_PASSWORD = "printnova-admin";
 
 const safeReadJson = (key, fallback) => {
   try {
@@ -29,121 +20,240 @@ const writeJson = (key, value) => {
   localStorage.setItem(key, JSON.stringify(value));
 };
 
-const getSettings = () => {
-  const stored = safeReadJson(STORAGE_KEYS.settings, null);
-  const settings = stored ? { ...DEFAULT_SETTINGS, ...stored } : { ...DEFAULT_SETTINGS };
-  if (!Array.isArray(settings.colors) || settings.colors.length === 0) {
-    settings.colors = [...DEFAULT_SETTINGS.colors];
+const loginSection = document.querySelector("#login-section");
+const adminSection = document.querySelector("#admin-section");
+const loginForm = document.querySelector("#login-form");
+const loginError = document.querySelector("#login-error");
+const settingsForm = document.querySelector("#settings-form");
+const galleryForm = document.querySelector("#gallery-form");
+const settingsStatus = document.querySelector("#settings-status");
+const galleryStatus = document.querySelector("#gallery-status");
+const adminGalleryGrid = document.querySelector("#admin-gallery-grid");
+const orderList = document.querySelector("#order-list");
+const logoutButton = document.querySelector("#logout-button");
+
+const defaultSettings = {
+  colors: ["Red", "White", "Black", "Gray"],
+  materials: ["PLA"],
+  pricing: {
+    plaPerGram: 5,
+    filamentCost: 1000,
+    laborPerGram: 1.91,
+    shippingNote: "Depends on location in Delhi NCR",
+  },
+};
+
+const ensureState = () => {
+  if (!safeReadJson(STORAGE_KEYS.settings, null)) {
+    writeJson(STORAGE_KEYS.settings, defaultSettings);
   }
+  if (!safeReadJson(STORAGE_KEYS.gallery, null)) {
+    writeJson(STORAGE_KEYS.gallery, []);
+  }
+};
+
+const getSettings = () => {
+  const stored = safeReadJson(STORAGE_KEYS.settings, defaultSettings);
+  const settings = {
+    ...defaultSettings,
+    ...stored,
+    pricing: { ...defaultSettings.pricing, ...stored.pricing },
+  };
+
+  if (!Array.isArray(settings.colors) || settings.colors.length === 0) {
+    settings.colors = [...defaultSettings.colors];
+  }
+
+  if (!Array.isArray(settings.materials) || settings.materials.length === 0) {
+    settings.materials = [...defaultSettings.materials];
+  }
+
   return settings;
 };
 
+const getGallery = () => safeReadJson(STORAGE_KEYS.gallery, []);
 const getOrders = () => safeReadJson(STORAGE_KEYS.orders, []);
 
-const formatCurrency = (value) => `₹${Math.round(value)}`;
-const formatDate = (date) => new Date(date).toLocaleString("en-IN", { dateStyle: "medium", timeStyle: "short" });
-
 const renderSettings = () => {
-  colorsField.value = getSettings().colors.join("\n");
+  const settings = getSettings();
+  document.querySelector("#colors-input").value = settings.colors.join("\n");
+  document.querySelector("#materials-input").value = settings.materials.join("\n");
+  document.querySelector("#pla-price-input").value = settings.pricing.plaPerGram;
+  document.querySelector("#filament-cost-input").value = settings.pricing.filamentCost;
+  document.querySelector("#labor-cost-input").value = settings.pricing.laborPerGram;
+  document.querySelector("#shipping-note-input").value = settings.pricing.shippingNote;
 };
 
-const renderSummary = () => {
-  const orders = getOrders();
-  summaryTotal.textContent = String(orders.length);
-  summaryPending.textContent = String(orders.filter((order) => order.status === "Pending Review").length);
-  summaryAccepted.textContent = String(orders.filter((order) => order.status === "Accepted").length);
-  summaryRejected.textContent = String(orders.filter((order) => order.status === "Rejected").length);
-};
+const renderGallery = () => {
+  const items = getGallery();
+  if (!items.length) {
+    adminGalleryGrid.innerHTML = '<div class="admin-gallery-item"><p class="admin-note">No gallery items added yet.</p></div>';
+    return;
+  }
 
-const buildOrderCard = (order) => {
-  const card = document.createElement("article");
-  card.className = "price-card admin-order-card";
-  card.innerHTML = `
-    <div class="admin-order-head">
-      <div>
-        <span class="price-label">${order.id}</span>
-        <h3>${order.customer.name}</h3>
-      </div>
-      <strong class="admin-order-status">${order.status}</strong>
-    </div>
-    <div class="admin-order-grid">
-      <div><span>Created</span><strong>${formatDate(order.createdAt)}</strong></div>
-      <div><span>Phone</span><strong>${order.customer.phone}</strong></div>
-      <div><span>Email</span><strong>${order.customer.email}</strong></div>
-      <div><span>Material / Color</span><strong>${order.settings.material} / ${order.settings.color}</strong></div>
-      <div><span>Weight</span><strong>${Math.round(order.estimate.weight)} g</strong></div>
-      <div><span>Total</span><strong>${formatCurrency(order.estimate.total)}</strong></div>
-      <div><span>Print time</span><strong>${order.estimate.printHours.toFixed(1)} hrs</strong></div>
-      <div><span>Delivery</span><strong>${order.estimate.delivery}</strong></div>
-      <div class="admin-order-span"><span>Address</span><strong>${order.customer.address}</strong></div>
-      <div class="admin-order-span"><span>Notes</span><strong>${order.customer.notes || "No extra notes"}</strong></div>
-      <div class="admin-order-span"><span>File</span><strong>${order.file ? `${order.file.name} (${order.file.source})` : "No file uploaded"}</strong></div>
-      <div class="admin-order-span"><span>System note</span><strong>${order.disclaimer || order.file?.note || order.estimate.weightSource}</strong></div>
-    </div>
-    <div class="admin-order-actions">
-      <button class="button button-primary" data-id="${order.id}" data-status="Accepted" type="button">Accept</button>
-      <button class="button button-secondary" data-id="${order.id}" data-status="Rejected" type="button">Reject</button>
-      <button class="button button-secondary" data-id="${order.id}" data-status="In Production" type="button">Mark In Production</button>
-      <button class="button button-secondary" data-id="${order.id}" data-status="Delivered" type="button">Mark Delivered</button>
-    </div>
-  `;
-  return card;
+  adminGalleryGrid.innerHTML = items
+    .map(
+      (item, index) => `
+        <article class="admin-gallery-item">
+          <img src="${item.image}" alt="${item.title}" />
+          <h3>${item.title}</h3>
+          <p>${item.description}</p>
+          <div class="mini-actions">
+            <button class="button button-secondary" data-gallery-delete="${index}" type="button">Delete</button>
+          </div>
+        </article>
+      `
+    )
+    .join("");
 };
 
 const renderOrders = () => {
   const orders = getOrders();
-  ordersList.innerHTML = "";
-
-  if (orders.length === 0) {
-    ordersList.innerHTML = '<div class="price-card admin-empty">No orders yet. Submit one from the public site first.</div>';
+  if (!orders.length) {
+    orderList.innerHTML = '<div class="order-card"><p>No orders have been submitted yet.</p></div>';
     return;
   }
 
-  orders.forEach((order) => {
-    ordersList.appendChild(buildOrderCard(order));
-  });
+  orderList.innerHTML = orders
+    .map(
+      (order, index) => `
+        <article class="order-card">
+          <span class="status-chip">${order.status}</span>
+          <h3>${order.id} - ${order.name}</h3>
+          <p>${order.email} | ${order.phone}</p>
+          <p>${order.address}</p>
+          <div class="order-meta">
+            <div><strong>File</strong><p>${order.fileName || "No file uploaded"}</p></div>
+            <div><strong>Design by company</strong><p>${order.companyDesign ? "Yes" : "No"}</p></div>
+            <div><strong>Settings</strong><p>${order.material}, ${order.color}, ${order.quality}</p></div>
+            <div><strong>Layer / Infill</strong><p>${order.layerHeight}/5, ${order.infill}%</p></div>
+          </div>
+          <p><strong>Description:</strong> ${order.description || "Not provided"}</p>
+          <div class="mini-actions">
+            <button class="button button-secondary" data-order-status="${index}" data-value="Pending Review" type="button">Pending</button>
+            <button class="button button-secondary" data-order-status="${index}" data-value="Quoted" type="button">Quoted</button>
+            <button class="button button-secondary" data-order-status="${index}" data-value="In Production" type="button">In Production</button>
+            <button class="button button-secondary" data-order-status="${index}" data-value="Completed" type="button">Completed</button>
+          </div>
+        </article>
+      `
+    )
+    .join("");
 };
 
-const updateOrderStatus = (id, status) => {
-  const orders = getOrders().map((order) => (order.id === id ? { ...order, status } : order));
-  writeJson(STORAGE_KEYS.orders, orders);
-  renderSummary();
-  renderOrders();
+const setLoggedIn = (value) => {
+  writeJson(STORAGE_KEYS.auth, { loggedIn: value });
 };
+
+const isLoggedIn = () => {
+  const auth = safeReadJson(STORAGE_KEYS.auth, { loggedIn: false });
+  return Boolean(auth.loggedIn);
+};
+
+const toggleAdminView = () => {
+  const loggedIn = isLoggedIn();
+  loginSection.classList.toggle("hidden", loggedIn);
+  adminSection.classList.toggle("hidden", !loggedIn);
+
+  if (loggedIn) {
+    renderSettings();
+    renderGallery();
+    renderOrders();
+  }
+};
+
+loginForm.addEventListener("submit", (event) => {
+  event.preventDefault();
+  const password = document.querySelector("#admin-password").value;
+
+  if (password !== DEFAULT_PASSWORD) {
+    loginError.textContent = "Incorrect password.";
+    return;
+  }
+
+  loginError.textContent = "";
+  setLoggedIn(true);
+  toggleAdminView();
+});
 
 settingsForm.addEventListener("submit", (event) => {
   event.preventDefault();
-  const colors = colorsField.value
-    .split("\n")
-    .map((line) => line.trim())
-    .filter(Boolean);
+  const settings = {
+    colors: document.querySelector("#colors-input").value.split("\n").map((item) => item.trim()).filter(Boolean),
+    materials: document.querySelector("#materials-input").value.split("\n").map((item) => item.trim()).filter(Boolean),
+    pricing: {
+      plaPerGram: Number(document.querySelector("#pla-price-input").value) || 5,
+      filamentCost: Number(document.querySelector("#filament-cost-input").value) || 1000,
+      laborPerGram: Number(document.querySelector("#labor-cost-input").value) || 1.91,
+      shippingNote: document.querySelector("#shipping-note-input").value.trim() || "Depends on location in Delhi NCR",
+    },
+  };
 
-  writeJson(STORAGE_KEYS.settings, { colors: colors.length ? colors : DEFAULT_SETTINGS.colors });
-  settingsStatus.textContent = "Available colors updated.";
+  writeJson(STORAGE_KEYS.settings, settings);
+  settingsStatus.textContent = "Business settings updated.";
 });
 
-ordersList.addEventListener("click", (event) => {
-  const button = event.target.closest("button[data-id][data-status]");
+galleryForm.addEventListener("submit", (event) => {
+  event.preventDefault();
+  const title = document.querySelector("#gallery-title").value.trim();
+  const description = document.querySelector("#gallery-description").value.trim();
+  const file = document.querySelector("#gallery-image").files[0];
+
+  if (!title || !description || !file) {
+    galleryStatus.textContent = "Title, description, and image are required.";
+    return;
+  }
+
+  const reader = new FileReader();
+  reader.onload = () => {
+    const items = getGallery();
+    items.unshift({
+      title,
+      description,
+      image: reader.result,
+    });
+    writeJson(STORAGE_KEYS.gallery, items);
+    galleryStatus.textContent = "Gallery item added.";
+    galleryForm.reset();
+    renderGallery();
+  };
+  reader.readAsDataURL(file);
+});
+
+adminGalleryGrid.addEventListener("click", (event) => {
+  const button = event.target.closest("[data-gallery-delete]");
   if (!button) {
     return;
   }
-  updateOrderStatus(button.dataset.id, button.dataset.status);
+
+  const index = Number(button.dataset.galleryDelete);
+  const items = getGallery();
+  items.splice(index, 1);
+  writeJson(STORAGE_KEYS.gallery, items);
+  renderGallery();
 });
 
-window.addEventListener("storage", () => {
-  renderSettings();
-  renderSummary();
+orderList.addEventListener("click", (event) => {
+  const button = event.target.closest("[data-order-status]");
+  if (!button) {
+    return;
+  }
+
+  const index = Number(button.dataset.orderStatus);
+  const orders = getOrders();
+  if (!orders[index]) {
+    return;
+  }
+
+  orders[index].status = button.dataset.value;
+  writeJson(STORAGE_KEYS.orders, orders);
   renderOrders();
 });
 
-if (!safeReadJson(STORAGE_KEYS.settings, null)) {
-  writeJson(STORAGE_KEYS.settings, DEFAULT_SETTINGS);
-}
-
-document.querySelectorAll(".reveal").forEach((item) => {
-  item.classList.add("is-visible");
+logoutButton.addEventListener("click", () => {
+  setLoggedIn(false);
+  toggleAdminView();
 });
 
-renderSettings();
-renderSummary();
-renderOrders();
+ensureState();
+toggleAdminView();

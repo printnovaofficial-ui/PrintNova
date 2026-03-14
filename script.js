@@ -1,84 +1,89 @@
 const STORAGE_KEYS = {
-  orders: "printnova-orders",
-  settings: "printnova-settings",
+  settings: "printnova-settings-v2",
+  gallery: "printnova-gallery-v2",
+  orders: "printnova-orders-v2",
 };
 
 const DEFAULT_SETTINGS = {
-  colors: ["Arctic White", "Graphite Black", "Signal Red", "Ocean Blue", "Forest Green"],
+  colors: ["Red", "White", "Black", "Gray"],
+  materials: ["PLA"],
+  pricing: {
+    plaPerGram: 5,
+    filamentCost: 1000,
+    laborPerGram: 1.91,
+    electricalRange: "₹0.05-₹0.10/g",
+    maintenanceRange: "₹0.05-₹0.15/g",
+    packagingRange: "₹0.05-₹0.10/g",
+    profitRange: "10%-20%",
+    shippingNote: "Depends on location in Delhi NCR",
+  },
 };
 
-const materialConfig = {
-  pla: { label: "PLA", density: 1.24, multiplier: 1 },
-  petg: { label: "PETG", density: 1.27, multiplier: 1.12 },
-  abs: { label: "ABS", density: 1.04, multiplier: 1.18 },
-  tpu: { label: "TPU", density: 1.21, multiplier: 1.28 },
-};
-
-const qualityConfig = {
-  draft: { speed: 0.82, multiplier: 0.92 },
-  standard: { speed: 1, multiplier: 1 },
-  fine: { speed: 1.35, multiplier: 1.12 },
-};
-
-const shippingConfig = {
-  delhi: { label: "Delhi", price: 80, eta: "2-3 days" },
-  ncr: { label: "Gurugram / Noida / NCR", price: 150, eta: "2-4 days" },
-  express: { label: "Express local courier", price: 240, eta: "24-48 hrs" },
-};
-
-const revealItems = document.querySelectorAll(".reveal");
-const parallaxItems = document.querySelectorAll(".hero-copy, .hero-visual, .feature-band");
-const tiltCards = document.querySelectorAll(".tilt-card");
-const cursorGlow = document.querySelector(".cursor-glow");
-const extruderCursor = document.querySelector(".extruder-cursor");
-const quoteForm = document.querySelector("#quote-form");
-const colorSelect = document.querySelector("#color");
-const fileDisclaimer = document.querySelector("#file-disclaimer");
-const orderStatus = document.querySelector("#order-status");
-const previewCanvas = document.querySelector("#model-preview");
-const trackingIdInput = document.querySelector("#tracking-id");
-const trackingButton = document.querySelector("#tracking-button");
-const trackingStatus = document.querySelector("#tracking-status");
-const trackingCopy = document.querySelector("#tracking-copy");
-
-const quoteFields = {
-  customerName: document.querySelector("#customer-name"),
-  customerPhone: document.querySelector("#customer-phone"),
-  customerEmail: document.querySelector("#customer-email"),
-  customerAddress: document.querySelector("#customer-address"),
-  customerNotes: document.querySelector("#customer-notes"),
-  file: document.querySelector("#model-file"),
-  material: document.querySelector("#material"),
-  color: colorSelect,
-  quality: document.querySelector("#quality"),
-  layerHeight: document.querySelector("#layer-height"),
-  infill: document.querySelector("#infill"),
-  length: document.querySelector("#length"),
-  width: document.querySelector("#width"),
-  height: document.querySelector("#height"),
-  quantity: document.querySelector("#quantity"),
-  shippingZone: document.querySelector("#shipping-zone"),
-};
-
-const quoteOutputs = {
-  infillValue: document.querySelector("#infill-value"),
-  fileName: document.querySelector("#file-name"),
-  fileMeta: document.querySelector("#file-meta"),
-  weight: document.querySelector("#weight-output"),
-  printPrice: document.querySelector("#print-price-output"),
-  shipping: document.querySelector("#shipping-output"),
-  total: document.querySelector("#total-output"),
-  weightSource: document.querySelector("#weight-source-output"),
-  printTime: document.querySelector("#print-time-output"),
-  delivery: document.querySelector("#delivery-output"),
-  color: document.querySelector("#color-output"),
-  material: document.querySelector("#material-output"),
-};
-
-const state = {
-  uploadedModel: null,
-  quote: null,
-};
+const DEFAULT_GALLERY = [
+  {
+    title: "Prototype Housing",
+    description: "Clean prototype print with a professional matte finish.",
+    image:
+      "data:image/svg+xml;utf8," +
+      encodeURIComponent(`
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 600">
+          <defs>
+            <linearGradient id="a" x1="0" y1="0" x2="1" y2="1">
+              <stop offset="0%" stop-color="#071c2a"/>
+              <stop offset="100%" stop-color="#0e3951"/>
+            </linearGradient>
+            <linearGradient id="b" x1="0" y1="0" x2="1" y2="1">
+              <stop offset="0%" stop-color="#ebfbff"/>
+              <stop offset="100%" stop-color="#56dbff"/>
+            </linearGradient>
+          </defs>
+          <rect width="800" height="600" fill="url(#a)"/>
+          <rect x="180" y="150" width="440" height="280" rx="48" fill="url(#b)" opacity="0.95"/>
+          <rect x="250" y="220" width="300" height="140" rx="24" fill="#0f3550"/>
+          <circle cx="400" cy="290" r="44" fill="#dff9ff"/>
+        </svg>
+      `),
+  },
+  {
+    title: "Display Model",
+    description: "Decorative print sample for product visuals and showcase pieces.",
+    image:
+      "data:image/svg+xml;utf8," +
+      encodeURIComponent(`
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 600">
+          <defs>
+            <linearGradient id="a" x1="0" y1="0" x2="1" y2="1">
+              <stop offset="0%" stop-color="#03131d"/>
+              <stop offset="100%" stop-color="#134764"/>
+            </linearGradient>
+          </defs>
+          <rect width="800" height="600" fill="url(#a)"/>
+          <path d="M400 120 590 250 520 460 280 460 210 250Z" fill="#58dbff" opacity="0.95"/>
+          <path d="M400 180 510 260 465 390 335 390 290 260Z" fill="#dff7ff"/>
+        </svg>
+      `),
+  },
+  {
+    title: "Functional Part",
+    description: "Suitable for utility parts and practical custom builds.",
+    image:
+      "data:image/svg+xml;utf8," +
+      encodeURIComponent(`
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 600">
+          <defs>
+            <linearGradient id="a" x1="0" y1="0" x2="1" y2="1">
+              <stop offset="0%" stop-color="#051925"/>
+              <stop offset="100%" stop-color="#0f3f58"/>
+            </linearGradient>
+          </defs>
+          <rect width="800" height="600" fill="url(#a)"/>
+          <circle cx="280" cy="300" r="110" fill="#b8f5ff"/>
+          <circle cx="520" cy="300" r="110" fill="#58dbff"/>
+          <rect x="250" y="270" width="300" height="60" rx="24" fill="#dff7ff"/>
+        </svg>
+      `),
+  },
+];
 
 const safeReadJson = (key, fallback) => {
   try {
@@ -95,529 +100,285 @@ const writeJson = (key, value) => {
 
 const getSettings = () => {
   const stored = safeReadJson(STORAGE_KEYS.settings, null);
-  const settings = stored ? { ...DEFAULT_SETTINGS, ...stored } : { ...DEFAULT_SETTINGS };
+  const settings = stored
+    ? { ...DEFAULT_SETTINGS, ...stored, pricing: { ...DEFAULT_SETTINGS.pricing, ...stored.pricing } }
+    : { ...DEFAULT_SETTINGS, pricing: { ...DEFAULT_SETTINGS.pricing } };
+
   if (!Array.isArray(settings.colors) || settings.colors.length === 0) {
     settings.colors = [...DEFAULT_SETTINGS.colors];
   }
+
+  if (!Array.isArray(settings.materials) || settings.materials.length === 0) {
+    settings.materials = [...DEFAULT_SETTINGS.materials];
+  }
+
   return settings;
+};
+
+const getGallery = () => {
+  const stored = safeReadJson(STORAGE_KEYS.gallery, null);
+  return Array.isArray(stored) && stored.length ? stored : DEFAULT_GALLERY;
 };
 
 const getOrders = () => safeReadJson(STORAGE_KEYS.orders, []);
 
-const formatCurrency = (value) => `₹${Math.round(value)}`;
-const formatWeight = (value) => `${Math.max(1, Math.round(value))} g`;
+const orderForm = document.querySelector("#order-form");
+const fileInput = document.querySelector("#customer-file");
+const fileName = document.querySelector("#file-name");
+const designCheckbox = document.querySelector("#company-design");
+const designDescription = document.querySelector("#design-description");
+const layerHeightInput = document.querySelector("#layer-height");
+const infillInput = document.querySelector("#infill");
+const qualityInput = document.querySelector("#quality");
+const colorInput = document.querySelector("#color");
+const materialInput = document.querySelector("#material");
+const formError = document.querySelector("#form-error");
+const successPanel = document.querySelector("#success-panel");
+const galleryGrid = document.querySelector("#gallery-grid");
 
-const drawPreview = (file) => {
-  if (!previewCanvas) {
-    return;
-  }
-
-  const ctx = previewCanvas.getContext("2d");
-  const width = previewCanvas.width;
-  const height = previewCanvas.height;
-  const name = file ? file.name : "MODEL PREVIEW";
-  const extension = file ? file.name.split(".").pop().toUpperCase() : "STL / 3MF";
-
-  ctx.clearRect(0, 0, width, height);
-
-  const bg = ctx.createLinearGradient(0, 0, 0, height);
-  bg.addColorStop(0, "#0c1728");
-  bg.addColorStop(1, "#060b14");
-  ctx.fillStyle = bg;
-  ctx.fillRect(0, 0, width, height);
-
-  ctx.strokeStyle = "rgba(85, 215, 255, 0.12)";
-  ctx.lineWidth = 1;
-  for (let x = 30; x < width; x += 30) {
-    ctx.beginPath();
-    ctx.moveTo(x, 0);
-    ctx.lineTo(x, height);
-    ctx.stroke();
-  }
-  for (let y = 20; y < height; y += 20) {
-    ctx.beginPath();
-    ctx.moveTo(0, y);
-    ctx.lineTo(width, y);
-    ctx.stroke();
-  }
-
-  const centerX = width / 2;
-  const centerY = height / 2 - 10;
-  const scale = 72;
-  const cube = [
-    [-1, -1, -1], [1, -1, -1], [1, 1, -1], [-1, 1, -1],
-    [-1, -1, 1], [1, -1, 1], [1, 1, 1], [-1, 1, 1],
-  ];
-  const edges = [
-    [0, 1], [1, 2], [2, 3], [3, 0],
-    [4, 5], [5, 6], [6, 7], [7, 4],
-    [0, 4], [1, 5], [2, 6], [3, 7],
-  ];
-
-  const project = ([x, y, z]) => {
-    const rotY = x * Math.cos(0.65) - z * Math.sin(0.65);
-    const rotZ = x * Math.sin(0.65) + z * Math.cos(0.65);
-    const rotX = y * Math.cos(-0.45) - rotZ * Math.sin(-0.45);
-    const depth = 4 + (y * Math.sin(-0.45) + rotZ * Math.cos(-0.45));
-    return [centerX + (rotY * scale) / depth, centerY + (rotX * scale) / depth];
-  };
-
-  ctx.strokeStyle = "rgba(85, 215, 255, 0.88)";
-  ctx.lineWidth = 2.2;
-  edges.forEach(([start, end]) => {
-    const [x1, y1] = project(cube[start]);
-    const [x2, y2] = project(cube[end]);
-    ctx.beginPath();
-    ctx.moveTo(x1, y1);
-    ctx.lineTo(x2, y2);
-    ctx.stroke();
-  });
-
-  ctx.fillStyle = "rgba(245, 138, 36, 0.92)";
-  ctx.fillRect(centerX - 8, centerY - 80, 16, 24);
-  ctx.fillStyle = "rgba(85, 215, 255, 0.9)";
-  ctx.fillRect(centerX - 4, centerY - 55, 8, 18);
-
-  ctx.fillStyle = "#f4f7fb";
-  ctx.font = '700 18px "Sora", sans-serif';
-  ctx.fillText(extension, 24, height - 46);
-  ctx.fillStyle = "#97a8bd";
-  ctx.font = '500 13px "Space Grotesk", sans-serif';
-  ctx.fillText(name.slice(0, 34), 24, height - 22);
+const syncRangeOutputs = () => {
+  document.querySelector("#layer-height-value").textContent = layerHeightInput.value;
+  document.querySelector("#infill-value").textContent = infillInput.value;
+  document.querySelector("#summary-layer").textContent = `${layerHeightInput.value} / 5`;
+  document.querySelector("#summary-infill").textContent = `${infillInput.value}%`;
 };
 
-const parseBinaryStl = (buffer) => {
-  const view = new DataView(buffer);
-  const faces = view.getUint32(80, true);
-  let volume = 0;
-  let minX = Infinity;
-  let minY = Infinity;
-  let minZ = Infinity;
-  let maxX = -Infinity;
-  let maxY = -Infinity;
-  let maxZ = -Infinity;
-
-  const readVertex = (offset) => {
-    const vertex = {
-      x: view.getFloat32(offset, true),
-      y: view.getFloat32(offset + 4, true),
-      z: view.getFloat32(offset + 8, true),
-    };
-    minX = Math.min(minX, vertex.x);
-    minY = Math.min(minY, vertex.y);
-    minZ = Math.min(minZ, vertex.z);
-    maxX = Math.max(maxX, vertex.x);
-    maxY = Math.max(maxY, vertex.y);
-    maxZ = Math.max(maxZ, vertex.z);
-    return vertex;
-  };
-
-  for (let i = 0; i < faces; i += 1) {
-    const offset = 84 + i * 50;
-    const v1 = readVertex(offset + 12);
-    const v2 = readVertex(offset + 24);
-    const v3 = readVertex(offset + 36);
-    volume += (
-      v1.x * v2.y * v3.z +
-      v2.x * v3.y * v1.z +
-      v3.x * v1.y * v2.z -
-      v1.x * v3.y * v2.z -
-      v2.x * v1.y * v3.z -
-      v3.x * v2.y * v1.z
-    ) / 6;
-  }
-
-  return {
-    volumeMm3: Math.abs(volume),
-    bounds: {
-      length: Math.max(0, maxX - minX),
-      width: Math.max(0, maxY - minY),
-      height: Math.max(0, maxZ - minZ),
-    },
-  };
+const syncSelectOutputs = () => {
+  document.querySelector("#summary-quality").textContent = qualityInput.value;
+  document.querySelector("#summary-color").textContent = colorInput.value;
+  document.querySelector("#summary-material").textContent = materialInput.value;
 };
 
-const parseAsciiStl = (text) => {
-  const matches = [...text.matchAll(/vertex\s+(-?\d*\.?\d+(?:e[-+]?\d+)?)\s+(-?\d*\.?\d+(?:e[-+]?\d+)?)\s+(-?\d*\.?\d+(?:e[-+]?\d+)?)/gi)];
-  let volume = 0;
-  let minX = Infinity;
-  let minY = Infinity;
-  let minZ = Infinity;
-  let maxX = -Infinity;
-  let maxY = -Infinity;
-  let maxZ = -Infinity;
-
-  for (let i = 0; i < matches.length; i += 3) {
-    const points = matches.slice(i, i + 3).map((match) => {
-      const point = {
-        x: Number(match[1]),
-        y: Number(match[2]),
-        z: Number(match[3]),
-      };
-      minX = Math.min(minX, point.x);
-      minY = Math.min(minY, point.y);
-      minZ = Math.min(minZ, point.z);
-      maxX = Math.max(maxX, point.x);
-      maxY = Math.max(maxY, point.y);
-      maxZ = Math.max(maxZ, point.z);
-      return point;
-    });
-
-    if (points.length === 3) {
-      const [v1, v2, v3] = points;
-      volume += (
-        v1.x * v2.y * v3.z +
-        v2.x * v3.y * v1.z +
-        v3.x * v1.y * v2.z -
-        v1.x * v3.y * v2.z -
-        v2.x * v1.y * v3.z -
-        v3.x * v2.y * v1.z
-      ) / 6;
-    }
-  }
-
-  return {
-    volumeMm3: Math.abs(volume),
-    bounds: {
-      length: Math.max(0, maxX - minX),
-      width: Math.max(0, maxY - minY),
-      height: Math.max(0, maxZ - minZ),
-    },
-  };
-};
-
-const analyzeUploadedModel = async (file) => {
-  if (!file) {
-    state.uploadedModel = null;
-    return;
-  }
-
-  const extension = file.name.split(".").pop().toLowerCase();
-
-  if (extension !== "stl") {
-    state.uploadedModel = {
-      fileName: file.name,
-      fileSize: file.size,
-      source: "manual",
-      note: "3MF uploads currently use manual dimensions for weight estimation.",
-    };
-    return;
-  }
-
-  const buffer = await file.arrayBuffer();
-  const header = new TextDecoder().decode(buffer.slice(0, 5)).toLowerCase();
-  const model = header === "solid" ? parseAsciiStl(new TextDecoder().decode(buffer)) : parseBinaryStl(buffer);
-
-  state.uploadedModel = {
-    fileName: file.name,
-    fileSize: file.size,
-    source: "stl",
-    volumeMm3: model.volumeMm3,
-    bounds: model.bounds,
-    note: "Weight estimated from STL geometry.",
-  };
-
-  if (model.bounds.length > 0 && model.bounds.width > 0 && model.bounds.height > 0) {
-    quoteFields.length.value = Math.min(220, Math.max(1, Math.round(model.bounds.length)));
-    quoteFields.width.value = Math.min(220, Math.max(1, Math.round(model.bounds.width)));
-    quoteFields.height.value = Math.min(250, Math.max(1, Math.round(model.bounds.height)));
-  }
-};
-
-const renderColors = () => {
+const populateSelections = () => {
   const settings = getSettings();
-  const previous = colorSelect.value;
-  colorSelect.innerHTML = settings.colors
-    .map((color) => `<option value="${color}">${color}</option>`)
-    .join("");
 
-  if (settings.colors.includes(previous)) {
-    colorSelect.value = previous;
-  }
+  colorInput.innerHTML = settings.colors.map((color) => `<option value="${color}">${color}</option>`).join("");
+  materialInput.innerHTML = settings.materials.map((material) => `<option value="${material}">${material}</option>`).join("");
+
+  syncSelectOutputs();
 };
 
-const buildQuote = () => {
-  const material = materialConfig[quoteFields.material.value];
-  const quality = qualityConfig[quoteFields.quality.value];
-  const shipping = shippingConfig[quoteFields.shippingZone.value];
-  const length = Math.min(Number(quoteFields.length.value) || 0, 220);
-  const width = Math.min(Number(quoteFields.width.value) || 0, 220);
-  const height = Math.min(Number(quoteFields.height.value) || 0, 250);
-  const quantity = Math.max(Number(quoteFields.quantity.value) || 1, 1);
-  const infill = Number(quoteFields.infill.value);
-  const layerHeight = Number(quoteFields.layerHeight.value);
-  const infillRatio = 0.18 + infill / 100;
-
-  let weightPerUnit = 0;
-  let weightSource = "Manual dimensions";
-
-  if (state.uploadedModel?.source === "stl" && state.uploadedModel.volumeMm3) {
-    const solidVolumeCm3 = state.uploadedModel.volumeMm3 / 1000;
-    const effectiveVolumeCm3 = solidVolumeCm3 * (0.22 + infill / 100 * 0.78);
-    weightPerUnit = effectiveVolumeCm3 * material.density;
-    weightSource = "STL geometry";
-  } else {
-    const volumeCm3 = (length * width * height) / 1000;
-    const shellFactor = 0.16;
-    const effectiveVolumeCm3 = volumeCm3 * (shellFactor + infillRatio * 0.32);
-    weightPerUnit = effectiveVolumeCm3 * material.density;
-    if (state.uploadedModel?.source === "manual") {
-      weightSource = "Manual dimensions (3MF fallback)";
-    }
-  }
-
-  const totalWeight = weightPerUnit * quantity;
-  const printPrice = Math.max(totalWeight * 5 * material.multiplier * quality.multiplier, 299);
-  const shippingPrice = shipping.price;
-  const total = printPrice + shippingPrice;
-  const volumeReference = state.uploadedModel?.volumeMm3 ? state.uploadedModel.volumeMm3 / 1000 : (length * width * height) / 1000;
-  const printHours = Math.max((volumeReference / 38) * quality.speed * (0.22 / layerHeight) * (0.72 + infill / 100) * quantity, 2.2);
-
-  return {
-    customer: {
-      name: quoteFields.customerName.value.trim(),
-      phone: quoteFields.customerPhone.value.trim(),
-      email: quoteFields.customerEmail.value.trim(),
-      address: quoteFields.customerAddress.value.trim(),
-      notes: quoteFields.customerNotes.value.trim(),
-    },
-    settings: {
-      material: material.label,
-      color: quoteFields.color.value,
-      quality: quoteFields.quality.value,
-      layerHeight,
-      infill,
-      quantity,
-      shippingZone: shipping.label,
-    },
-    dimensions: { length, width, height },
-    file: state.uploadedModel
-      ? {
-          name: state.uploadedModel.fileName,
-          size: state.uploadedModel.fileSize,
-          source: state.uploadedModel.source,
-          note: state.uploadedModel.note,
-        }
-      : null,
-    disclaimer: state.uploadedModel ? "" : "No file uploaded. Support must contact this customer within 24 hours.",
-    estimate: {
-      weight: totalWeight,
-      weightSource,
-      printPrice,
-      shippingPrice,
-      total,
-      printHours,
-      delivery: shipping.eta,
-    },
-  };
-};
-
-const updateQuote = () => {
-  const quote = buildQuote();
-  state.quote = quote;
-
-  quoteOutputs.infillValue.textContent = `${quote.settings.infill}%`;
-  quoteOutputs.weight.textContent = formatWeight(quote.estimate.weight);
-  quoteOutputs.printPrice.textContent = formatCurrency(quote.estimate.printPrice);
-  quoteOutputs.shipping.textContent = formatCurrency(quote.estimate.shippingPrice);
-  quoteOutputs.total.textContent = formatCurrency(quote.estimate.total);
-  quoteOutputs.weightSource.textContent = quote.estimate.weightSource;
-  quoteOutputs.printTime.textContent = `${quote.estimate.printHours.toFixed(1)} hrs`;
-  quoteOutputs.delivery.textContent = quote.estimate.delivery;
-  quoteOutputs.color.textContent = quote.settings.color;
-  quoteOutputs.material.textContent = quote.settings.material;
-
-  if (state.uploadedModel) {
-    quoteOutputs.fileName.textContent = state.uploadedModel.fileName;
-    quoteOutputs.fileMeta.textContent = `${state.uploadedModel.fileName.split(".").pop().toUpperCase()} • ${(state.uploadedModel.fileSize / 1024 / 1024).toFixed(2)} MB • ${quote.dimensions.length}×${quote.dimensions.width}×${quote.dimensions.height} mm`;
-  } else {
-    quoteOutputs.fileName.textContent = "No file uploaded yet";
-    quoteOutputs.fileMeta.textContent = `Using manual dimensions: ${quote.dimensions.length}×${quote.dimensions.width}×${quote.dimensions.height} mm`;
-  }
-
-  fileDisclaimer.classList.toggle("is-visible", !state.uploadedModel);
-};
-
-const generateOrderId = () => {
-  const orders = getOrders();
-  const next = orders.length + 24031;
-  return `PN-${next}`;
-};
-
-const submitOrder = () => {
-  const quote = buildQuote();
-  const orderId = generateOrderId();
-  const order = {
-    id: orderId,
-    createdAt: new Date().toISOString(),
-    status: "Pending Review",
-    ...quote,
-  };
-
-  const orders = getOrders();
-  orders.unshift(order);
-  writeJson(STORAGE_KEYS.orders, orders);
-
-  orderStatus.textContent = `Order ${orderId} sent to admin dashboard.`;
-  trackingStatus.textContent = order.status;
-  trackingCopy.textContent = `Your order was submitted. Save this ID: ${orderId}.`;
-  trackingIdInput.value = orderId;
-  window.dispatchEvent(new Event("storage"));
-};
-
-const findOrder = (id) => getOrders().find((order) => order.id === id);
-
-const handleFileChange = async () => {
-  const file = quoteFields.file.files[0];
-  drawPreview(file || null);
-  await analyzeUploadedModel(file);
-  updateQuote();
-};
-
-const attachFieldEvents = () => {
-  Object.values(quoteFields).forEach((field) => {
-    if (!field || field === quoteFields.file) {
-      return;
-    }
-    field.addEventListener("input", updateQuote);
-    field.addEventListener("change", updateQuote);
-  });
-
-  quoteFields.file.addEventListener("change", handleFileChange);
-
-  quoteForm.addEventListener("submit", (event) => {
-    event.preventDefault();
-    if (!quoteForm.reportValidity()) {
-      return;
-    }
-    submitOrder();
-  });
-
-  trackingButton.addEventListener("click", () => {
-    const id = trackingIdInput.value.trim().toUpperCase();
-    const order = findOrder(id);
-
-    if (order) {
-      trackingStatus.textContent = order.status;
-      trackingCopy.textContent = order.disclaimer || `${order.estimate.delivery} estimated delivery. ${formatWeight(order.estimate.weight)} estimated weight.`;
-      return;
-    }
-
-    trackingStatus.textContent = "Order ID not found";
-    trackingCopy.textContent = "Use the ID generated after order submission, or check the admin page in the same browser.";
-  });
-
-  window.addEventListener("storage", () => {
-    renderColors();
-    updateQuote();
-  });
-};
-
-const initReveal = () => {
-  const revealObserver = new IntersectionObserver(
-    (entries) => {
-      entries.forEach((entry) => {
-        if (entry.isIntersecting) {
-          entry.target.classList.add("is-visible");
-          revealObserver.unobserve(entry.target);
-        }
-      });
-    },
-    { threshold: 0.18, rootMargin: "0px 0px -10% 0px" }
-  );
-
-  revealItems.forEach((item) => revealObserver.observe(item));
-};
-
-const initParallax = () => {
-  const updateParallax = () => {
-    const viewportHeight = window.innerHeight;
-    parallaxItems.forEach((item) => {
-      const rect = item.getBoundingClientRect();
-      const midpoint = rect.top + rect.height / 2;
-      const progress = (midpoint - viewportHeight / 2) / viewportHeight;
-      item.style.setProperty("--parallax-shift", `${progress * -28}px`);
-      item.classList.add("parallax");
-    });
-  };
-
-  updateParallax();
-  window.addEventListener("scroll", updateParallax, { passive: true });
-  window.addEventListener("resize", updateParallax);
-};
-
-const initTilt = () => {
-  tiltCards.forEach((card) => {
-    card.addEventListener("pointermove", (event) => {
-      const bounds = card.getBoundingClientRect();
-      const x = event.clientX - bounds.left;
-      const y = event.clientY - bounds.top;
-      card.style.setProperty("--rotateX", `${((y / bounds.height) - 0.5) * -10}deg`);
-      card.style.setProperty("--rotateY", `${((x / bounds.width) - 0.5) * 10}deg`);
-      card.style.setProperty("--pointer-x", `${(x / bounds.width) * 100}%`);
-      card.style.setProperty("--pointer-y", `${(y / bounds.height) * 100}%`);
-    });
-
-    card.addEventListener("pointerleave", () => {
-      card.style.setProperty("--rotateX", "0deg");
-      card.style.setProperty("--rotateY", "0deg");
-      card.style.setProperty("--pointer-x", "50%");
-      card.style.setProperty("--pointer-y", "50%");
-    });
-  });
-};
-
-const initCursor = () => {
-  if (!cursorGlow || !extruderCursor || !window.matchMedia("(hover: hover) and (pointer: fine)").matches) {
+const renderGallery = () => {
+  if (!galleryGrid) {
     return;
   }
 
-  let cursorX = 0;
-  let cursorY = 0;
-
-  const renderCursor = () => {
-    const isPressed = document.body.classList.contains("cursor-pressed");
-    cursorGlow.style.transform = `translate3d(${cursorX}px, ${cursorY}px, 0) translate(-50%, -50%)`;
-    extruderCursor.style.transform = `translate3d(${cursorX - 16}px, ${cursorY - 10}px, 0) rotate(${isPressed ? -4 : -16}deg) scale(${isPressed ? 0.94 : 1})`;
-  };
-
-  window.addEventListener("pointermove", (event) => {
-    document.body.classList.add("cursor-active");
-    cursorX = event.clientX;
-    cursorY = event.clientY;
-    renderCursor();
-  });
-
-  window.addEventListener("pointerdown", () => {
-    document.body.classList.add("cursor-pressed");
-    renderCursor();
-  });
-
-  window.addEventListener("pointerup", () => {
-    document.body.classList.remove("cursor-pressed");
-    renderCursor();
-  });
-
-  document.addEventListener("mouseout", (event) => {
-    if (event.relatedTarget === null) {
-      document.body.classList.remove("cursor-active", "cursor-pressed");
-    }
-  });
+  const items = getGallery();
+  galleryGrid.innerHTML = items
+    .map(
+      (item) => `
+        <article class="gallery-card">
+          <img src="${item.image}" alt="${item.title}" />
+          <h3>${item.title}</h3>
+          <p>${item.description}</p>
+        </article>
+      `
+    )
+    .join("");
 };
 
-const init = () => {
-  if (!safeReadJson(STORAGE_KEYS.settings, null)) {
-    writeJson(STORAGE_KEYS.settings, DEFAULT_SETTINGS);
+const buildEmailBody = (payload) => {
+  return [
+    "New PrintNova order request",
+    "",
+    `Name: ${payload.name}`,
+    `Phone: ${payload.phone}`,
+    `Email: ${payload.email}`,
+    `Address: ${payload.address}`,
+    "Delivery Region: Delhi NCR only",
+    "",
+    `File Uploaded: ${payload.fileName || "No"}`,
+    `Designed by Company: ${payload.companyDesign ? "Yes" : "No"}`,
+    `Description: ${payload.description || "Not provided"}`,
+    "",
+    `Layer Height: ${payload.layerHeight}/5`,
+    `Infill: ${payload.infill}%`,
+    `Quality: ${payload.quality}`,
+    `Color: ${payload.color}`,
+    `Material: ${payload.material}`,
+    "",
+    "Pricing notes shown on website:",
+    "PLA = Rs. 5/gram + delivery charges",
+    "Filament cost: 1000",
+    "Labor charges: Rs. 1.91/g",
+    "Electrical charges: Rs. 0.05-0.10/g",
+    "Maintenance: Rs. 0.05-0.15/g",
+    "Packaging: Rs. 0.05-0.10/g",
+    "Profit: nearly 10-20%",
+    "Shipping cost depends on location",
+    "",
+    "Customer was informed that final pricing will be shared after order placement and can be declined before production.",
+  ].join("\n");
+};
+
+const trySendWithFormSubmit = async (payload) => {
+  const response = await fetch("https://formsubmit.co/ajax/printnovaofficial@gmail.com", {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+      Accept: "application/json",
+    },
+    body: JSON.stringify({
+      _subject: `PrintNova Order Request - ${payload.name}`,
+      _template: "table",
+      _captcha: "false",
+      name: payload.name,
+      phone: payload.phone,
+      email: payload.email,
+      address: payload.address,
+      delivery_region: "Delhi NCR only",
+      file_uploaded: payload.fileName || "No file uploaded",
+      designed_by_company: payload.companyDesign ? "Yes" : "No",
+      design_description: payload.description || "Not provided",
+      layer_height: `${payload.layerHeight}/5`,
+      infill: `${payload.infill}%`,
+      quality: payload.quality,
+      color: payload.color,
+      material: payload.material,
+      pricing_note: "PLA = Rs. 5/gram + delivery charges. Final price shared after order placement.",
+    }),
+  });
+
+  if (!response.ok) {
+    throw new Error("Remote mail request failed");
+  }
+};
+
+const openMailClientFallback = (payload) => {
+  const subject = encodeURIComponent(`PrintNova Order Request - ${payload.name}`);
+  const body = encodeURIComponent(buildEmailBody(payload));
+  window.location.href = `mailto:printnovaofficial@gmail.com?subject=${subject}&body=${body}`;
+};
+
+const validateForm = () => {
+  const name = document.querySelector("#customer-name").value.trim();
+  const phone = document.querySelector("#customer-phone").value.trim();
+  const email = document.querySelector("#customer-email").value.trim();
+  const address = document.querySelector("#customer-address").value.trim();
+  const file = fileInput.files[0];
+  const companyDesign = designCheckbox.checked;
+  const description = designDescription.value.trim();
+
+  if (!name || !phone || !email || !address) {
+    return { valid: false, error: "Please complete all mandatory contact fields." };
   }
 
-  renderColors();
-  drawPreview(null);
-  initReveal();
-  initParallax();
-  initTilt();
-  initCursor();
-  attachFieldEvents();
-  updateQuote();
+  if (!/^\d{10}$/.test(phone)) {
+    return { valid: false, error: "Phone number must be exactly 10 digits." };
+  }
+
+  if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
+    return { valid: false, error: "Please enter a valid email ID." };
+  }
+
+  if (!/delhi|noida|gurugram|gurgaon|ghaziabad|faridabad/i.test(address)) {
+    return { valid: false, error: "Delivery is applicable only in Delhi NCR. Please enter a Delhi NCR address." };
+  }
+
+  if (!file && !companyDesign) {
+    return { valid: false, error: "You must either upload a file or choose 'Designed by the company'." };
+  }
+
+  if (companyDesign && !description) {
+    return { valid: false, error: "Description is mandatory when 'Designed by the company' is selected." };
+  }
+
+  return {
+    valid: true,
+    payload: {
+      name,
+      phone,
+      email,
+      address,
+      fileName: file ? file.name : "",
+      companyDesign,
+      description,
+      layerHeight: layerHeightInput.value,
+      infill: infillInput.value,
+      quality: qualityInput.value,
+      color: colorInput.value,
+      material: materialInput.value,
+      createdAt: new Date().toISOString(),
+      status: "Pending Review",
+    },
+  };
 };
 
-init();
+const saveOrderLocally = (payload) => {
+  const orders = getOrders();
+  orders.unshift({
+    id: `PN-${Date.now().toString().slice(-6)}`,
+    ...payload,
+  });
+  writeJson(STORAGE_KEYS.orders, orders);
+};
+
+const resetFormState = () => {
+  orderForm.reset();
+  fileName.textContent = "No file selected.";
+  populateSelections();
+  syncRangeOutputs();
+  syncSelectOutputs();
+};
+
+if (fileInput) {
+  fileInput.addEventListener("change", () => {
+    fileName.textContent = fileInput.files[0] ? fileInput.files[0].name : "No file selected.";
+  });
+}
+
+if (layerHeightInput && infillInput) {
+  layerHeightInput.addEventListener("input", syncRangeOutputs);
+  infillInput.addEventListener("input", syncRangeOutputs);
+}
+
+if (qualityInput && colorInput && materialInput) {
+  qualityInput.addEventListener("change", syncSelectOutputs);
+  colorInput.addEventListener("change", syncSelectOutputs);
+  materialInput.addEventListener("change", syncSelectOutputs);
+}
+
+if (orderForm) {
+  orderForm.addEventListener("submit", async (event) => {
+    event.preventDefault();
+    formError.textContent = "";
+
+    const result = validateForm();
+    if (!result.valid) {
+      formError.textContent = result.error;
+      successPanel.classList.add("hidden");
+      return;
+    }
+
+    saveOrderLocally(result.payload);
+
+    try {
+      await trySendWithFormSubmit(result.payload);
+    } catch {
+      openMailClientFallback(result.payload);
+    }
+
+    successPanel.classList.remove("hidden");
+    resetFormState();
+    window.scrollTo({ top: successPanel.offsetTop - 120, behavior: "smooth" });
+  });
+}
+
+if (!safeReadJson(STORAGE_KEYS.settings, null)) {
+  writeJson(STORAGE_KEYS.settings, DEFAULT_SETTINGS);
+}
+
+if (!safeReadJson(STORAGE_KEYS.gallery, null)) {
+  writeJson(STORAGE_KEYS.gallery, DEFAULT_GALLERY);
+}
+
+populateSelections();
+renderGallery();
+syncRangeOutputs();
+syncSelectOutputs();
+
+window.addEventListener("storage", () => {
+  populateSelections();
+  renderGallery();
+  syncSelectOutputs();
+});

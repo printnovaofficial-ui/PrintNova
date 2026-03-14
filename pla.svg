@@ -1,0 +1,17 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 800">
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#03141f" />
+      <stop offset="100%" stop-color="#0d4a67" />
+    </linearGradient>
+    <linearGradient id="filament" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#f6ffff" />
+      <stop offset="100%" stop-color="#63defb" />
+    </linearGradient>
+  </defs>
+  <rect width="1200" height="800" fill="url(#bg)" />
+  <circle cx="600" cy="400" r="240" fill="none" stroke="url(#filament)" stroke-width="60" />
+  <circle cx="600" cy="400" r="82" fill="#082131" stroke="#c9fbff" stroke-width="16" />
+  <path d="M360 420c80-110 150-170 240-170 100 0 170 56 244 164" fill="none" stroke="#e0fbff" stroke-width="18" stroke-linecap="round"/>
+  <text x="600" y="690" fill="#e9fdff" font-family="Arial, sans-serif" font-size="58" text-anchor="middle">PLA</text>
+</svg>
